@@ -9,7 +9,7 @@ spec:
     server: "https://kubernetes.default.svc"
     namespace: default
   sources:
-  - repoURL: https://github.com/AzamatKomaev/argo-demo-habr.git
+  - repoURL: https://https://github.com/vvatutin/argo-cd.git
     path: apps/cnpg-cluster/manifests
     targetRevision: HEAD
 
