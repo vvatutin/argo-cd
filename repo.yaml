@@ -7,4 +7,4 @@ metadata:
     argocd.argoproj.io/secret-type: repository
 stringData:
   type: git
-  url: https://github.com/AzamatKomaev/argo-demo-habr
+  url: https://https://github.com/vvatutin/argo-cd
