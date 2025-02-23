@@ -7,4 +7,4 @@ metadata:
     argocd.argoproj.io/secret-type: repository
 stringData:
   type: git
-  url: https://https://github.com/vvatutin/argo-cd
+  url: https://github.com/vvatutin/argo-cd
