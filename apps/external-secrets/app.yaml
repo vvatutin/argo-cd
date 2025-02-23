@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   sources:
-  - repoURL: https://github.com/AzamatKomaev/argo-demo-habr.git
+  - repoURL: https://github.com/vvatutin/argo-cd.git
     targetRevision: HEAD
     path: apps/external-secrets/manifests
   - repoURL: https://charts.external-secrets.io
