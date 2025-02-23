@@ -1,0 +1,67 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: monitoring
+  source:
+    chart: kube-prometheus-stack
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 60.1.0
+    helm:
+      releaseName: prometheus
+      values: |
+        grafana:
+          enabled: true
+          service:
+            type: NodePort
+            nodePort: 31234
+          persistence:
+            enabled: true
+            accessModes:
+              - ReadWriteOnce
+            size: 5Gi
+            finalizers:
+              - kubernetes.io/pvc-protection
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - prometheus-grafana.monitoring
+            tls: 
+              - secretName: grafana-tls
+                hosts:
+                - prometheus-grafana.monitoring
+
+        defaultRules:
+          create: false
+
+        alertmanager:
+          enabled: false
+
+        prometheus:
+          enabled: true
+
+          prometheusSpec:
+            storageSpec: 
+              volumeClaimTemplate:
+                spec:
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 10Gi
+            podMonitorSelectorNilUsesHelmValues: false
+            serviceMonitorSelectorNilUsesHelmValues: false
+          
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true
+    

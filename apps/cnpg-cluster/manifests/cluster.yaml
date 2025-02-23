@@ -1,0 +1,18 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres-db
+  namespace: default
+spec:
+  bootstrap:
+    initdb:
+      database: db
+      owner: db
+      secret:
+        name: db-creds
+  instances: 1
+  monitoring:
+    enablePodMonitor: true
+  storage:
+    size: 1Gi
+    storageClass: local-path

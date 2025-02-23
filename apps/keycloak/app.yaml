@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keycloak
+  namespace: argocd
+spec:
+  project: default  # проект по-умолчанию
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+  sources:
+  - repoURL: https://github.com/AzamatKomaev/argo-demo-habr.git
+    targetRevision: HEAD
+    path: apps/keycloak/manifests
+      
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

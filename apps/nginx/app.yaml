@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx
+  namespace: argocd  # тот же самый, где установлен ArgoCD
+spec:
+  project: default  # проект по-умолчанию
+  destination:
+    server: "https://kubernetes.default.svc"  # Kubernetes API адрес. Т.к ArgoCD запущен в тот же кластере, то путь до ClusterIP 
+    namespace: nginx-demo  # пространство имен, где будут созданы ресурсы
+  sources:
+  - repoURL: https://github.com/AzamatKomaev/argo-demo-habr.git  # ссылка на Git-репозиторий
+    targetRevision: HEAD  # указание на ветку, с котрой стоит синхронизировать состояние репозитория
+    path: apps/nginx/manifests  # абсолютный путь до директории с манифестами
+      
+  syncPolicy:
+    automated:
+      prune: true  # разрешает удаление ресурса
+      selfHeal: true  # разрешает ArgoCD самому приводить состояние кластера в соответствии с Git-репозиторием 
+    syncOptions:
+    - CreateNamespace=true  # создавать пространство имён, если оно не существует

@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  labels:
+    app: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      volumes:
+      - name: tls
+        secret:
+          secretName: keycloak-crt
+      - name: data
+        persistentVolumeClaim:
+          claimName: keycloak-data
+
+      containers:
+        - name: keycloak
+          image: quay.io/keycloak/keycloak:25.0.5
+          args: ["start-dev", "--hostname=keycloak.default", "--https-certificate-file=/etc/keycloak/tls/tls.crt", "--https-certificate-key-file=/etc/keycloak/tls/tls.key"]
+          env:
+          - name: KEYCLOAK_ADMIN
+            value: "admin"
+          - name: KEYCLOAK_ADMIN_PASSWORD
+            value: "admin"
+          - name: KC_PROXY
+            value: "edge"
+          ports:
+          - name: http
+            containerPort: 8080
+          - name: https
+            containerPort: 9000
+          volumeMounts:
+          - name: tls
+            mountPath: "/etc/keycloak/tls"
+            readOnly: true
+          - name: data
+            mountPath: "/opt/keycloak/data/h2"
+          readinessProbe:
+            httpGet:
+              path: /realms/master
+              port: 8080
