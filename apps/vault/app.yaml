@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     chart: vault
-    repoURL: registry-1.docker.io/azamatkomaev
+    repoURL: registry-1.docker.io/vvatutin
     path: .
     targetRevision: 0.28.0
     helm:
